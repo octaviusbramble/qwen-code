@@ -1,0 +1,1 @@
+{"model":"qwen3-coder","provider":{"base_url":"https://argolink.io/v1","api_key_env":"OPENAI_API_KEY"},"request":{"endpoint":"chat/completions","temperature":0.2}}

@@ -1,29 +1,25 @@
-# Argolink coding agent patterns
+# Qwen Code with an OpenAI-compatible endpoint
 
-A reproducible, inspectable workflow for turning a script or task plan into Argolink media jobs.
+This is an independent configuration note for connecting a Qwen Code-style client to a documented OpenAI-compatible endpoint. It is not the Qwen or Alibaba SDK. **[ArgoLink](https://argolink.io/gh-qwen-code) is an example endpoint in the settings file, not an affiliation.** Last checked: 2026-10-07.
 
-[Open the Argolink API docs →](https://argolink.io/gh-qwen-code)
+## Configuration
 
-## Stages
+Start from config/settings.example.json. Put a real secret in the environment variable named by api_key_env, not in JSON. The base URL is https://argolink.io/v1 for the listed route. Confirm the client appends the expected path; some clients append /chat/completions while others expect a base ending at /v1. Use a local mock to inspect the final URL before a paid call.
 
-1. Parse the source into scenes or jobs.
-2. Write a structured plan with stable IDs.
-3. Validate prompt, duration, ratio, and references.
-4. Submit jobs and persist request IDs.
-5. Poll and download artifacts into a run directory.
-6. Assemble, caption, and publish only after a human review.
+The exact Qwen Code settings keys and locations can change. Treat this file as a mapping of concepts—model, base URL, key environment name, endpoint, and temperature—and translate them into the current client documentation. A config field that is ignored is worse than an explicit startup error.
 
-See [`workflow/plan.yaml`](./workflow/plan.yaml) and [`docs/runbook.md`](./docs/runbook.md).
+## Model availability
 
-## Argolink boundary
+The ArgoLink catalog must be read before selecting a Qwen ID. This repository does not claim that every Qwen model exists on the endpoint. Verify model ID, context, output, tools, streaming, and structured output separately. If the target is not in the catalog, stop instead of substituting a similarly named model.
 
-Runtime requests read credentials from `ARGOLINK_API_KEY` and never from committed files.
+## Troubleshooting
 
-All examples, field names, routes, and environment variables in this repository are written for Argolink. Check the linked documentation for live availability and limits. No external provider credentials, author attribution, or copied checkout material is required to use this repository.
+401 usually means the client sent the wrong environment variable or base URL. 404 may mean a duplicated path. 400 often means the model does not support the selected parameter. A timeout after a text request should be traced with the response ID; do not automatically repeat a tool call that may have had side effects. Log endpoint and model, but redact Authorization.
 
-## Layout
+## Checks
 
-- `docs/` contains the public design and validation notes.
-- `examples/` contains small runnable examples.
-- `argolink/` contains the Argolink mapping for this repository.
-- `ARGOLINK_LINKS.md` contains the tracked landing link.
+Run python3 config/validate.py config/settings.example.json and python3 -m unittest discover -s tests offline. No provider request is made. Before production, run a minimal schema test, then a small request, and record the date and catalog revision. Keep the client and model contract separate so an SDK upgrade cannot silently change model selection.
+
+## FAQ
+
+**Is this official?** No. **Can I set an arbitrary Qwen name?** Only if the live catalog documents it. **Does compatibility guarantee tools?** No; test the target model. **Why a neutral key name?** It keeps the client portable. **Where are prices?** On the dated model page or catalog, not this configuration note.
