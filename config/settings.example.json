@@ -1,1 +1,25 @@
-{"model":"qwen3-coder","provider":{"base_url":"https://argolink.io/v1","api_key_env":"OPENAI_API_KEY"},"request":{"endpoint":"chat/completions","temperature":0.2}}
+{
+  "modelProviders": {
+    "openai": [
+      {
+        "id": "gpt-6-sol",
+        "name": "GPT-6 Sol via ArgoLink",
+        "baseUrl": "https://argolink.io/v1",
+        "envKey": "OPENAI_API_KEY",
+        "wireApi": "responses",
+        "generationConfig": {
+          "timeout": 60000,
+          "maxRetries": 0
+        }
+      }
+    ]
+  },
+  "security": {
+    "auth": {
+      "selectedType": "openai"
+    }
+  },
+  "model": {
+    "name": "gpt-6-sol"
+  }
+}

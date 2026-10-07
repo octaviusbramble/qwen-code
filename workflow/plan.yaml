@@ -1,14 +1,21 @@
 version: 1
-model: seedance-2.5
+client: qwen-code
+provider_protocol: openai
+model: gpt-6-sol
+wire_api: responses
 steps:
-  - id: plan
-    output: storyboard.json
-  - id: submit
-    input: storyboard.json
-    output: request_ids.json
-  - id: poll
-    input: request_ids.json
-    output: media/
-  - id: review
-    input: media/
-    output: review.json
+  - id: install
+    command: npm install -g @qwen-code/qwen-code
+  - id: configure
+    file: ~/.qwen/settings.json
+    source: ../config/settings.example.json
+  - id: secret
+    environment: OPENAI_API_KEY
+    note: export in the shell or place it in ~/.qwen/.env; never commit it
+  - id: doctor
+    command: qwen
+    action: /doctor
+  - id: schema-check
+    note: use a local mock or inspect the final URL before an approved request
+  - id: canary
+    note: only after the live model catalog confirms gpt-6-sol and the budget is approved
